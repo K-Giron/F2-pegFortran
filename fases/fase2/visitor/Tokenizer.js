@@ -7,21 +7,22 @@ module tokenizer
 implicit none
 
 contains
-function nextSym(input, cursor) result(lexem)
+function nextSym(input, cursor) result(lexeme)
     character(len=*), intent(in) :: input
-    interger, intent(inout) :: cursor
-    character(len=:), allocatable :: lexeme
+    integer, intent(inout) :: cursor
+    character(len=:), allocatable :: lexeme  ! Se usa para longitud variable
 
+    ! Verificar si el cursor está fuera del rango
     if (cursor > len(input)) then
-        allowcate(character(len=3) :: lexeme)
-        lexeme = "EOF"
+        lexeme = "EOF"  ! Devolver "EOF" si se llega al final de la cadena
         return
     end if
 
     ${grammar.map(produccion => produccion.accept(this)).join('\n')}
     
-    print *, "Error lexico en la col: ",cursor,',"'//input(cursor:cursor)//'"'
-    lexeme = "ERROR"
+    ! Si no se encuentra un token válido, devolver un error léxico
+    print *, "Error léxico en la columna: ", cursor, ', "', input(cursor:), '"'
+    lexeme = "ERROR"  ! Devuelve "ERROR" si no se encuentra un token válido
 end function nextSym
 end module tokenizer
         `;
@@ -40,12 +41,11 @@ end module tokenizer
     }
 	visitString(node){
         return `
-        if ("${node.val}" == input(cursor:cursor + ${node.val.length -1})) then !Foo
-            allowcate(character(len=3) :: lexeme)
-            lexeme = input(cursor:cursor + ${node.val.length -1})
-            cursor = cursor + ${node.val.length}
-            return
-        end if
+    if (cursor + ${node.val.length -1} <= len(input) .and. input(cursor:cursor + ${node.val.length -1}) == "${node.val}") then
+        lexeme = input(cursor:cursor + ${node.val.length -1})
+        cursor = cursor + ${node.val.length}
+        return
+    end if
         `;
     }
 }

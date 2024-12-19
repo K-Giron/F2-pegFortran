@@ -1,0 +1,8 @@
+1. Compilar el módulo Tokenizer.f90:
+gfortran -c Tokenizer.f90
+
+2. Compilar el programa parser.f90 con el archivo objeto del módulo:
+gfortran -o programa parser.f90 Tokenizer.o
+
+3. Ejecutar el programa:
+programa.exe
