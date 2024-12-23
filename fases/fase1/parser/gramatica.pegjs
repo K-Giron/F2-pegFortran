@@ -39,13 +39,11 @@ union = expr:expresion rest:(_ @expresion !(_ literales? _ "=") )* {
     return new n.Union([expr, ...rest]);
 }
 
-expresion  = label:(etiqueta/varios)? _ expr:expresiones _ qty:([?+*]/conteo)? {
-    return new n.Expresion(expr, label, qty);
-}
+expresion = ("@")? _ id:(identificador _ ":")?_ varios? _ expresiones _ ([?+*]/conteo)?
 
-etiqueta = ("@")? _ id:identificador _ ":" (varios)?
+//etiqueta = ("@")? _ id:identificador _ ":" (varios)?
 
-varios = ("!"/"$"/"@"/"&")
+varios = ("!"/"&"/"$")
 
 expresiones  =  id:identificador { usos.push(id)
                     return new n.Identificador(id);
