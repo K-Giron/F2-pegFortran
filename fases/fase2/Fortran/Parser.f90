@@ -8,6 +8,7 @@ program parser
     
     cursor = 1
     lexeme = ""  ! Inicializar lexeme para evitar problemas en la condición del bucle
+    print *, " Tipo "//" Simbolo "
 
     do while (lexeme /= "EOF" .and. lexeme /= "ERROR")
         lexeme = nextSym(input, cursor)
