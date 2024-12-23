@@ -1,5 +1,5 @@
 // Generar clases para CST
-// Este archivo genera las clases necesarias para implementar el patrón visitante con Typescript
+// Este archivo genera las clases necesarias para implementar el patrón visitante 
 
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
