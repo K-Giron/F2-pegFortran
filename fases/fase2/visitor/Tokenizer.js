@@ -50,20 +50,25 @@ end module tokenizer
         if(node.exprs.length <= 1){
             return node.exprs[0].accept(this);
         }else{
+            //regla = "Hola"i "Mundo"
             return node.exprs.map(expr => expr.accept(this));
         }
+        //return node.exprs[0].accept(this);
     }
 	visitUnion(node){
         if(node.exprs.length <= 1){
             return node.exprs[0].accept(this);
         }else{
             const results = node.exprs.map(expr => expr.accept(this));
-            console.log("Union\n",results.join(' // '))
+            //console.log("Union\n",results.join('\n'))
             // Generamos el código Fortran para la concatenación
             return `
 if (cursor + ${node.exprs.map(expr => expr.expr.val.length - 1).join(' + ')} <= len(input)) then
-    ${results}
+    ${results.join('\n')}
 end if`;
+            //regla = "Hola"i "Mundo"
+            return node.exprs.map(expr => expr.accept(this));
+            // Aquí almacenamos los resultados de cada expresión
         }
     }
 	visitExpresion(node){
