@@ -23,6 +23,7 @@ export default class Tokenizer extends Visitor {
       const results = node.exprs.map((expr) => expr.accept(this));
       //console.log("Union\n",results.join('\n'))
       // Generamos el código Fortran para la concatenación
+      return `${results.join("\n")}`
       return `
 if (cursor + ${node.exprs
         .map((expr) => expr.expr.val.length - 1)
@@ -47,7 +48,7 @@ if (cursor + ${node.val.length - 1} <= len(input) .and. input(cursor:cursor + ${
       }) == "${node.val}") then
     lexeme = "String " // input(cursor:cursor + ${node.val.length - 1})
     cursor = cursor + ${node.val.length}
-    !return
+    return
 end if`;
     } else {
       return `
@@ -58,7 +59,7 @@ if (cursor + ${
       })) == "${node.val.toUpperCase()}") then
     lexeme = "String " // input(cursor:cursor + ${node.val.length - 1})
     cursor = cursor + ${node.val.length}
-    !return
+    return
 end if`;
     }
   }
@@ -78,8 +79,8 @@ ${node.chars
   }
   visitRango(node) {
     return `
-if (input(i:i) >= "${node.bottom}" .and. input(i:i) <= "${node.top}") then
-    lexeme = input(cursor:i)
+if (i<= len(input) .and. input(i:i) >= "${node.bottom}" .and. input(i:i) <= "${node.top}") then
+    lexeme = input(i:i)
     cursor = i + 1
     return
 end if

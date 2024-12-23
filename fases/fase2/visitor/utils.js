@@ -9,11 +9,16 @@ implicit none
 contains
 
 subroutine parse(input)
-    character(len=:), intent(inout), allocatable :: input
-    do while (len(input) > 0)
-        print *, nextsym(input)
-    end do
-end subroutine parse
+        character(len=:), intent(inout), allocatable :: input
+        integer :: cursor = 1
+        character(len=:), allocatable :: lexeme
+	print *, "Tipo "//"Lexema"
+        do while (len(input) > 0)
+            lexeme = nextSym(input, cursor)
+            if (lexeme == "EOF") exit
+            print *, lexeme
+        end do
+    end subroutine parse
 
 function upcase(s) result(upper)
     character(len=*), intent(in) :: s
@@ -34,6 +39,8 @@ function nextSym(input, cursor) result(lexeme)
     integer, intent(inout) :: cursor
     character(len=:), allocatable :: lexeme  ! Se usa para longitud variable
 
+    integer :: i
+
     ! Verificar si el cursor está fuera del rango
     if (cursor > len(input)) then
         lexeme = "EOF"  ! Devolver "EOF" si se llega al final de la cadena
@@ -45,6 +52,8 @@ function nextSym(input, cursor) result(lexeme)
 
     print *, "error lexico en col ", cursor, ', "'//input(cursor:cursor)//'"'
     lexeme = "ERROR"
+    cursor = cursor + 1  ! Incrementar el cursor para evitar bucle infinito
+
 end function nextSym
 end module tokenizer 
     `;
