@@ -292,7 +292,9 @@ function peg$parse(input, options) {
   var peg$f4 = function(label, expr, qty) {
     return new n.Expresion(expr, label, qty);
 };
-  var peg$f5 = function(id) { usos.push(id) };
+  var peg$f5 = function(id) { usos.push(id)
+                    return new n.Identificador(id);
+                };
   var peg$f6 = function(val, isCase) {
                     return new n.String(val, isCase);
                 };
@@ -740,15 +742,13 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
-    s1 = peg$currPos;
-    s2 = peg$parseetiqueta();
-    if (s2 === peg$FAILED) {
-      s2 = peg$parsevarios();
+    s1 = peg$parseetiqueta();
+    if (s1 === peg$FAILED) {
+      s1 = peg$parsevarios();
     }
-    if (s2 === peg$FAILED) {
-      s2 = null;
+    if (s1 === peg$FAILED) {
+      s1 = null;
     }
-    s1 = input.substring(s1, peg$currPos);
     s2 = peg$parse_();
     s3 = peg$parseexpresiones();
     if (s3 !== peg$FAILED) {

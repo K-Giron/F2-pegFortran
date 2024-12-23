@@ -5,6 +5,7 @@ const nodes = {
     Union: ['exprs'],
     Expresion: ['expr', 'label', 'qty'],
     String: ['val', 'isCase'],
+    Identificador: ['id'],
 };
 
 export default nodes;

@@ -62,3 +62,14 @@ export class String extends Node {
     }
 }
     
+export class Identificador extends Node {
+    constructor(id) {
+        super();
+        this.id = id;
+    }
+
+    accept(visitor){
+        return visitor.visitIdentificador(this);
+    }
+}
+    

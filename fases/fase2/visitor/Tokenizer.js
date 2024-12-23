@@ -2,12 +2,7 @@ import Visitor from './Visitor.js'
 
 export default class Tokenizer extends Visitor{
     generateTokenizer(grammar){
-        const resultado = grammar
-    .map(produccion => produccion.accept(this).trim()) // Aplica trim() a cada cadena
-    .filter(result => result !== undefined && result !== '') // Filtra valores undefined o vacíos
-    .join('\n'); // Une las cadenas con un salto de línea
-
-console.log(resultado);
+        //console.log("G",grammar.map(produccion => produccion.accept(this)));
         return `
 module tokenizer
 implicit none
@@ -38,7 +33,7 @@ function nextSym(input, cursor) result(lexeme)
         return
     end if
 
-    ${grammar.map(produccion => produccion.accept(this)).filter(result => result !== undefined).join('\n')}
+    ${grammar.map(produccion => produccion.accept(this)).flat().filter(result => result !== undefined).join('\n')}
     
     ! Si no se encuentra un token válido, devolver un error léxico
     print *, "Error léxico en la columna: ", cursor, ', "', input(cursor:), '"'
@@ -52,18 +47,23 @@ end module tokenizer
     }
 	visitOpciones(node){
         //console.log("Esta es una opcion",node)
-        return node.exprs[0].accept(this);
-    }
-	visitUnion(node){
-        //console.log(node.exprs.length);
         if(node.exprs.length <= 1){
-            //console.log("Este es una Union:",node.exprs);
             return node.exprs[0].accept(this);
         }else{
-            //console.log("Este es una Union:",node.exprs);
-            //regla = "Hola"i "Mundo"
             return node.exprs.map(expr => expr.accept(this));
-            //return node.exprs.join().accept(this);
+        }
+    }
+	visitUnion(node){
+        if(node.exprs.length <= 1){
+            return node.exprs[0].accept(this);
+        }else{
+            const results = node.exprs.map(expr => expr.accept(this));
+            console.log("Union\n",results.join(' // '))
+            // Generamos el código Fortran para la concatenación
+            return `
+if (cursor + ${node.exprs.map(expr => expr.expr.val.length - 1).join(' + ')} <= len(input)) then
+    ${results}
+end if`;
         }
     }
 	visitExpresion(node){
@@ -75,19 +75,20 @@ end module tokenizer
         if(node.isCase == null){
             return `
 if (cursor + ${node.val.length -1} <= len(input) .and. input(cursor:cursor + ${node.val.length -1}) == "${node.val}") then
-    lexeme = input(cursor:cursor + ${node.val.length -1})
+    lexeme = "String " // input(cursor:cursor + ${node.val.length -1})
     cursor = cursor + ${node.val.length}
-    return
-end if
-                `;
+    !return
+end if`;
         }else{
             return `
 if (cursor + ${node.val.length -1} <= len(input) .and. upcase(input(cursor:cursor + ${node.val.length -1})) == "${node.val.toUpperCase()}") then
-    lexeme = input(cursor:cursor + ${node.val.length -1})
+    lexeme = "String " // input(cursor:cursor + ${node.val.length -1})
     cursor = cursor + ${node.val.length}
-    return
-end if
-                `;
+    !return
+end if`;
         }
+    }
+    visitIdentificador(node){
+        return
     }
 }
