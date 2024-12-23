@@ -7,23 +7,30 @@ export default class Tokenizer extends Visitor {
     return node.expr.accept(this);
   }
   visitOpciones(node) {
-    //console.log("Esta es una opcion",node)
+    // Verificar si solo hay una opción
     if (node.exprs.length <= 1) {
       return node.exprs[0].accept(this);
     } else {
-      //regla = "Hola"i "Mundo"
+      // Generar las condiciones combinadas con if-else
+      const conditions = node.exprs.map((expr, index) => {
+        const condition = expr.accept(this).replace(/\s*end if\s*$/, ""); // Eliminar `end if` de los nodos
+        if (index === 0) {
+          return condition; // El primer caso es un `if`
+        } else {
+          return `else ${condition.trim()}`; // Los casos posteriores son `else if`
+        }
+      });
+
+      // Unir todas las condiciones en un único bloque con un solo cierre `end if`
       return `
-      if (cursor + ${node.exprs.map((expr) => expr.expr.val.length - 1).join(" + ")} <= len(input)) then
-          if (${results.join(" .or. ")}) then
-              lexeme = "Opción válida"
-              cursor = cursor + 1
-              return
-          end if
-      end if`;
-      
-      //return node.exprs.map((expr) => expr.accept(this));
+  ${conditions.join("\n")}
+else
+    print *, "No se encontraron coincidencias en col ", cursor, ', "'//input(cursor:cursor)//'"'
+    lexeme = "NO MATCH"
+    cursor = cursor + 1
+    return
+end if`;
     }
-    //return node.exprs[0].accept(this);
   }
   visitUnion(node) {
     if (node.exprs.length <= 1) {
@@ -32,16 +39,16 @@ export default class Tokenizer extends Visitor {
       const results = node.exprs.map((expr) => expr.accept(this));
       //console.log("Union\n",results.join('\n'))
       // Generamos el código Fortran para la concatenación
-      return `${results.join("\n")}`
-      return `
-if (cursor + ${node.exprs
-        .map((expr) => expr.expr.val.length - 1)
-        .join(" + ")} <= len(input)) then
-    ${results.join("\n")}
-end if`;
-      //regla = "Hola"i "Mundo"
-      return node.exprs.map((expr) => expr.accept(this));
-      // Aquí almacenamos los resultados de cada expresión
+      return `${results.join("\n")}`;
+      //       return `
+      // if (cursor + ${node.exprs
+      //         .map((expr) => expr.expr.val.length - 1)
+      //         .join(" + ")} <= len(input)) then
+      //     ${results.join("\n")}
+      // end if`;
+      //       //regla = "Hola"i "Mundo"
+      //       return node.exprs.map((expr) => expr.accept(this));
+      //       // Aquí almacenamos los resultados de cada expresión
     }
   }
   visitExpresion(node) {
