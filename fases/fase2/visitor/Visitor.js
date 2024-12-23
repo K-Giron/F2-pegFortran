@@ -9,4 +9,6 @@ export default class Visitor {
 	visitExpresion(node){}
 	visitString(node){}
 	visitIdentificador(node){}
+	visitClase(node){}
+	visitRango(node){}
 }

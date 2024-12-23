@@ -54,7 +54,9 @@ expresiones  =  id:identificador { usos.push(id)
                     return new n.String(val, isCase);
                 }
                 / "(" _ opciones _ ")"
-                / corchetes "i"?
+                / chars:clase isCase:"i"? {
+                    return new n.Clase(chars, isCase)
+                }
                 / "."
                 / "!."
 
@@ -72,20 +74,15 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 // delimitador =  "," _ expresion
 
 // Regla principal que analiza corchetes con contenido
-corchetes
-    = "[" contenido:(rango / contenido)+ "]" {
-        return `Entrada válida: [${input}]`;
-    }
+clase
+  = "[" @contenidoClase+ "]"
 
 // Regla para validar un rango como [A-Z]
-rango
-    = inicio:caracter "-" fin:caracter {
-        if (inicio.charCodeAt(0) > fin.charCodeAt(0)) {
-            throw new Error(`Rango inválido: [${inicio}-${fin}]`);
-
-        }
-        return `${inicio}-${fin}`;
-    }
+contenidoClase
+  = bottom:$[^\[\]] "-" top:$[^\[\]] {
+    return new n.Rango(bottom, top);
+  }
+  / $[^\[\]]
 
 // Regla para caracteres individuales
 caracter
