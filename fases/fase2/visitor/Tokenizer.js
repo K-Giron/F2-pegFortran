@@ -23,13 +23,7 @@ export default class Tokenizer extends Visitor {
 
       // Unir todas las condiciones en un único bloque con un solo cierre `end if`
       return `
-  ${conditions.join("\n")}
-else
-    print *, "No se encontraron coincidencias en col ", cursor, ', "'//input(cursor:cursor)//'"'
-    lexeme = "NO MATCH"
-    cursor = cursor + 1
-    return
-end if`;
+  ${conditions.join("\n")}`;
     }
   }
   visitUnion(node) {
