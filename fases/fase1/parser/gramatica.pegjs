@@ -54,7 +54,9 @@ expresiones  =  id:identificador { usos.push(id)
                 / val:literales isCase:"i"? {
                     return new n.String(val, isCase);
                 }
-                / "(" _ opciones _ ")"
+                / "(" _ op:opciones _ ")"{
+                    return op
+                }
                 / chars:clase isCase:"i"? {
                     return new n.Clase(chars, isCase)
                 }

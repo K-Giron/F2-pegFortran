@@ -87,6 +87,7 @@ ${node.chars
     `;
   }
   visitRango(node) {
+    console.log(node);
     return `
 if (i<= len(input) .and. input(i:i) >= "${node.bottom}" .and. input(i:i) <= "${node.top}") then
     lexeme = input(i:i)

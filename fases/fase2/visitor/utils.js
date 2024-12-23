@@ -44,6 +44,7 @@ function nextSym(input, cursor) result(lexeme)
     ! Verificar si el cursor está fuera del rango
     if (cursor > len(input)) then
         lexeme = "EOF"  ! Devolver "EOF" si se llega al final de la cadena
+        print*, lexeme
         return
     end if
 
@@ -60,6 +61,7 @@ end module tokenizer
 }
 
 export function generateCaracteres(chars) {
+    console.log("Inicio",chars.map((char) => `"${char}"`),"Fin")
   if (chars.length === 0) return "";
   return `
     if (findloc([${chars
