@@ -12,7 +12,16 @@ export default class Tokenizer extends Visitor {
       return node.exprs[0].accept(this);
     } else {
       //regla = "Hola"i "Mundo"
-      return node.exprs.map((expr) => expr.accept(this));
+      return `
+      if (cursor + ${node.exprs.map((expr) => expr.expr.val.length - 1).join(" + ")} <= len(input)) then
+          if (${results.join(" .or. ")}) then
+              lexeme = "Opción válida"
+              cursor = cursor + 1
+              return
+          end if
+      end if`;
+      
+      //return node.exprs.map((expr) => expr.accept(this));
     }
     //return node.exprs[0].accept(this);
   }
