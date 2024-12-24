@@ -23,7 +23,8 @@ export default class Tokenizer extends Visitor {
 
       // Unir todas las condiciones en un único bloque con un solo cierre `end if`
       return `
-  ${conditions.join("\n")}`;
+  ${conditions.join("\n")}
+end if`;
     }
   }
   visitUnion(node) {
