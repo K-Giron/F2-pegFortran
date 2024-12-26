@@ -1,17 +1,13 @@
-program parser
+program test_tokenizer
     use tokenizer
     implicit none
 
-    character(len=*), parameter :: input = "Hola" !Aqui se debe colocar la entrada, en la variable input
-    character(len=:), allocatable :: lexeme
-    integer :: cursor
-    
-    cursor = 1
-    lexeme = ""  ! Inicializar lexeme para evitar problemas en la condición del bucle
-    print *, " Tipo "//" Simbolo "
+    character(len=:), allocatable :: input_string
 
-    do while (lexeme /= "EOF" .and. lexeme /= "ERROR")
-        lexeme = nextSym(input, cursor)
-        print *, lexeme
-    end do
-end program parser
+    ! Asignar una cadena de entrada para probar
+    input_string = "7"
+
+    ! Llamar a la subrutina parse para procesar la cadena
+    call parse(input_string)
+
+end program test_tokenizer
