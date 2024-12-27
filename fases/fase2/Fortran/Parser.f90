@@ -5,7 +5,7 @@ program test_tokenizer
     character(len=:), allocatable :: input_string
 
     ! Asignar una cadena de entrada para probar
-    input_string = "7"
+    input_string = "hola"
 
     ! Llamar a la subrutina parse para procesar la cadena
     call parse(input_string)
